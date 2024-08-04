@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: example-api
+  description: An example API
+spec:
+  type: openapi
+  lifecycle: production
+  owner: team-a
+  definition:
+    $ref: 'https://raw.githubusercontent.com/raafiakram/backstage_api_docs/develop/simple_api.json'
+
