@@ -1,21 +1,21 @@
 apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
-  name: example-api
+  name: tirzok-api
   description: An example API
 spec:
   type: openapi
   lifecycle: production
-  owner: team-a
+  owner: team-Golam
   definition: |
     openapi: 3.0.0
     info:
-      title: Example API
+      title: Nginx apis
       version: 1.0.0
     paths:
       /example:
         get:
-          summary: Example endpoint
+          summary: Payment endpoint
           responses:
             '200':
               description: Successful response
