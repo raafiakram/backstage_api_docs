@@ -7,6 +7,16 @@ spec:
   type: openapi
   lifecycle: production
   owner: team-a
-  definition:
-    $ref: 'https://raw.githubusercontent.com/raafiakram/backstage_api_docs/develop/simple_api.json'
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: Example API
+      version: 1.0.0
+    paths:
+      /example:
+        get:
+          summary: Example endpoint
+          responses:
+            '200':
+              description: Successful response
 
