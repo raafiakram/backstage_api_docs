@@ -1,0 +1,48 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Simple API",
+    "version": "1.0.0",
+    "description": "A simple API to demonstrate OpenAPI 3.0.0 format."
+  },
+  "paths": {
+    "/greet": {
+      "get": {
+        "summary": "Greet the user",
+        "operationId": "greetUser",
+        "responses": {
+          "200": {
+            "description": "A successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Hello, world!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Greeting": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "A greeting message"
+          }
+        }
+      }
+    }
+  }
+}
+
