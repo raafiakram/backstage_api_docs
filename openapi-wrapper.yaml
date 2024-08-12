@@ -20,7 +20,7 @@ spec:
       - url: http://dev-api.tplerp.com/v1
         description: Local development server
     paths:
-      /example:
+      /payment:
         get:
           summary: Payment endpoint
           description: |
