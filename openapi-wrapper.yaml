@@ -4,7 +4,7 @@ metadata:
   name: tirzok-api
   description: An example API
   annotations:
-    backstage.io/techdocs-ref: https://github.com/raafiakram/backstage_api_docs/blob/develop/API_Documentation.md
+    backstage.io/techdocs-ref: "url:https://github.com/raafiakram/backstage_api_docs/blob/develop/API_Documentation.md"
 spec:
   type: openapi
   lifecycle: production
