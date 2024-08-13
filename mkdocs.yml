@@ -1,5 +1,6 @@
 site_name: Project Documentation
 site_description: An informative description
+repo_url: https://github.com/raafiakram/backstage_api_docs/tree/develop/docs
 plugins:
   - techdocs-core
 nav:
