@@ -13,7 +13,8 @@ spec:
       title: NGINX Declarative API
       version: 1.0.0
     servers:
-      - url: http://192.168.159.134:5000
+      - url: http://192.168.159.134
+        description: Nginx Declarative API Server
     paths:
       /v5.0/config:
         post:
