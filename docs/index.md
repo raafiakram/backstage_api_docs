@@ -1,4 +1,4 @@
-# Example API Documentation
+# Some API Documentation
 
 ## Overview
 
@@ -6,10 +6,10 @@ This document provides an overview of the Example API and its backend.
 
 ### API Endpoints
 
-#### Payment Endpoint
+#### Sale Endpoint
 
-- **Endpoint**: `/v1/payment`
-- **Method**: GET
+- **Endpoint**: `/v1/sale`
+- **Method**: POST
 - **Description**: Retrieves payment details based on provided parameters.
 
 #### Parameters
@@ -21,5 +21,5 @@ This document provides an overview of the Example API and its backend.
 ### Example Request
 
 ```bash
-curl -X GET "http://api.tplerp.com/v1/payment?paymentId=abc123&status=completed&date=2024-08-01"
+curl -X GET "http://api.tplerp.com/v1/sale?saleId=abc123&status=completed&date=2024-08-01"
 

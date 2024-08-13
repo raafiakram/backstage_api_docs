@@ -1,0 +1,7 @@
+site_name: Project Documentation
+site_description: An informative description
+plugins:
+  - techdocs-core
+nav:
+  - Getting Started: index.md
+  - Additional Doc: API_Documentation.md

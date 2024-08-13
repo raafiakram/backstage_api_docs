@@ -3,6 +3,8 @@ kind: API
 metadata:
   name: declarative-api
   description: API for NGINX Declarative Configuration
+  annotations:
+    backstage.io/techdocs-ref: dir:.
 spec:
   type: openapi
   lifecycle: production
