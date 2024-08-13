@@ -1,8 +1,8 @@
 apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
-  name: nginx-declarative-api
-  description: API to configure NGINX declaratively using a JSON payload
+  name: declarative-api
+  description: API for NGINX Declarative Configuration
 spec:
   type: openapi
   lifecycle: production
@@ -12,15 +12,15 @@ spec:
     info:
       title: NGINX Declarative API
       version: 1.0.0
-      description: |
-        This API allows you to configure NGINX servers, locations, and rate limits declaratively using JSON payloads.
+    servers:
+      - url: http://192.168.159.134:5000
     paths:
       /v5.0/config:
         post:
-          summary: Configure NGINX
-          operationId: configureNginx
+          summary: Publish configuration to NGINX
+          operationId: publishConfig
           requestBody:
-            description: JSON payload to configure NGINX
+            description: Configuration to be published
             required: true
             content:
               application/json:
@@ -32,129 +32,81 @@ spec:
                       properties:
                         type:
                           type: string
-                          enum:
-                            - nms
+                          example: "nms"
                         nms:
                           type: object
                           properties:
                             url:
                               type: string
-                              format: uri
+                              example: "https://192.168.159.134"
                             username:
                               type: string
+                              example: "admin"
                             password:
                               type: string
+                              example: "ziY5BZbZmpd43O8xVGi13ocbpSnw8P"
                             instancegroup:
                               type: string
+                              example: "declarativeAPITest"
                             synctime:
                               type: integer
+                              example: 0
                             modules:
                               type: array
                               items:
                                 type: string
+                  example:
+                    output:
+                      type: "nms"
+                      nms:
+                        url: "https://192.168.159.134"
+                        username: "admin"
+                        password: "ziY5BZbZmpd43O8xVGi13ocbpSnw8P"
+                        instancegroup: "declarativeAPITest"
+                        synctime: 0
+                        modules: []
                     declaration:
-                      type: object
-                      properties:
-                        http:
-                          type: object
-                          properties:
-                            servers:
-                              type: array
-                              items:
-                                type: object
-                                properties:
-                                  name:
-                                    type: string
-                                  names:
-                                    type: array
-                                    items:
-                                      type: string
-                                  resolver:
-                                    type: string
-                                  listen:
-                                    type: object
-                                    properties:
-                                      address:
-                                        type: string
-                                  log:
-                                    type: object
-                                    properties:
-                                      access:
-                                        type: string
-                                      error:
-                                        type: string
-                                  locations:
-                                    type: array
-                                    items:
-                                      type: object
-                                      properties:
-                                        uri:
-                                          type: string
-                                        urimatch:
-                                          type: string
-                                          enum:
-                                            - prefix
-                                        apigateway:
-                                          type: object
-                                          properties:
-                                            openapi_schema:
-                                              type: object
-                                              properties:
-                                                content:
-                                                  type: string
-                                                  format: uri
-                                            api_gateway:
-                                              type: object
-                                              properties:
-                                                enabled:
-                                                  type: boolean
-                                                strip_uri:
-                                                  type: boolean
-                                                server_url:
-                                                  type: string
-                                                  format: uri
-                                            rate_limit:
-                                              type: array
-                                              items:
-                                                type: object
-                                                properties:
-                                                  profile:
-                                                    type: string
-                                                  httpcode:
-                                                    type: integer
-                                                  burst:
-                                                    type: integer
-                                                  delay:
-                                                    type: integer
-                                                  enforceOnPaths:
-                                                    type: boolean
-                                                  paths:
-                                                    type: array
-                                                    items:
-                                                      type: string
-                                        log:
-                                          type: object
-                                          properties:
-                                            access:
-                                              type: string
-                                            error:
-                                              type: string
-                            rate_limit:
-                              type: array
-                              items:
-                                type: object
-                                properties:
-                                  name:
-                                    type: string
-                                  key:
-                                    type: string
-                                  size:
-                                    type: string
-                                  rate:
-                                    type: string
+                      http:
+                        servers:
+                          - name: "Petstore API"
+                            names:
+                              - "apigw.nginx.lab"
+                            resolver: "8.8.8.8"
+                            listen:
+                              address: "80"
+                            log:
+                              access: "/var/log/nginx/apigw.nginx.lab-access_log"
+                              error: "/var/log/nginx/apigw.nginx.lab-error_log"
+                            locations:
+                              - uri: "/petstore"
+                                urimatch: "prefix"
+                                apigateway:
+                                  openapi_schema:
+                                    content: "http://petstore.swagger.io/v2/swagger.json"
+                                  api_gateway:
+                                    enabled: true
+                                    strip_uri: true
+                                    server_url: "https://petstore.swagger.io/v2"
+                                  rate_limit:
+                                    - profile: "petstore_ratelimit"
+                                      httpcode: 429
+                                      burst: 0
+                                      delay: 0
+                                      enforceOnPaths: true
+                                      paths:
+                                        - "/user/login"
+                                        - "/user/logout"
+                                log:
+                                  access: "/var/log/nginx/petstore-access_log"
+                                  error: "/var/log/nginx/petstore-error_log"
+                        rate_limit:
+                          - name: "petstore_ratelimit"
+                            key: "$binary_remote_addr"
+                            size: "10m"
+                            rate: "2r/s"
           responses:
             '200':
-              description: Successfully configured NGINX
+              description: Successfully published the configuration
               content:
                 application/json:
                   schema:
@@ -162,12 +114,13 @@ spec:
                     properties:
                       code:
                         type: integer
+                        example: 200
                       content:
                         type: object
                         properties:
                           createTime:
                             type: string
-                            format: date-time
+                            example: "2024-08-13T04:48:30.856421821Z"
                           details:
                             type: object
                             properties:
@@ -186,66 +139,20 @@ spec:
                                   properties:
                                     name:
                                       type: string
+                                      example: "f5nafizraafidapiserver"
                           id:
                             type: string
+                            example: "f580bba6-fd3c-4b8c-95d0-819b5474c624"
                           message:
                             type: string
+                            example: "Instance Group config successfully published to declarativeAPITest"
                           status:
                             type: string
+                            example: "successful"
                           updateTime:
                             type: string
-                            format: date-time
+                            example: "2024-08-13T04:48:32.641811707Z"
                       configUid:
                         type: string
-          examples:
-            application/json:
-              value:
-                output:
-                  type: nms
-                  nms:
-                    url: "https://192.168.159.134"
-                    username: "admin"
-                    password: "ziY5BZbZmpd43O8xVGi13ocbpSnw8P"
-                    instancegroup: "declarativeAPITest"
-                    synctime: 0
-                    modules: []
-                declaration:
-                  http:
-                    servers:
-                      - name: "Petstore API"
-                        names:
-                          - "apigw.nginx.lab"
-                        resolver: "8.8.8.8"
-                        listen:
-                          address: "80"
-                        log:
-                          access: "/var/log/nginx/apigw.nginx.lab-access_log"
-                          error: "/var/log/nginx/apigw.nginx.lab-error_log"
-                        locations:
-                          - uri: "/petstore"
-                            urimatch: "prefix"
-                            apigateway:
-                              openapi_schema:
-                                content: "http://petstore.swagger.io/v2/swagger.json"
-                              api_gateway:
-                                enabled: true
-                                strip_uri: true
-                                server_url: "https://petstore.swagger.io/v2"
-                              rate_limit:
-                                - profile: "petstore_ratelimit"
-                                  httpcode: 429
-                                  burst: 0
-                                  delay: 0
-                                  enforceOnPaths: true
-                                  paths:
-                                    - "/user/login"
-                                    - "/user/logout"
-                            log:
-                              access: "/var/log/nginx/petstore-access_log"
-                              error: "/var/log/nginx/petstore-error_log"
-                    rate_limit:
-                      - name: "petstore_ratelimit"
-                        key: "$binary_remote_addr"
-                        size: "10m"
-                        rate: "2r/s"
+                        example: "513037b1-ce33-40c6-a884-92728c626877"
 
